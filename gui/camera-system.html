@@ -1,0 +1,60 @@
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+  <script src="linkers/car-detection-linker.js"></script>
+
+  <script>
+    function updateInputFileLabel() {
+      console.log(inputFile.value)
+      const reader = new FileReader()
+      reader.readAsText(input)
+
+    }
+
+
+
+  </script>
+
+
+
+
+
+</head>
+<script>
+
+</script>
+
+<body>
+  <br>
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Object detection</h1>
+      <h2>Powered by Python</h2>
+      <p>Rendered by HTML and JavaScript</p>
+    </div>
+    <br>
+
+    <br>
+
+
+    <div class="input-group">
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" id="inputFile">
+        <label class="custom-file-label" for="inputFile">Choose file</label>
+      </div>
+      <div class="input-group-append">
+        <button onclick="get_video()" class="btn btn-outline-secondary" type="button">Button</button>
+      </div>
+    </div>
+
+
+
+    <br>
+  </div>
+
+
+
+
+  <body>
