@@ -20,6 +20,7 @@
     "electron": "^11.3.0"
   },
   "dependencies": {
-    "python-shell": "^1.0.8"
+    "python-shell": "^1.0.8",
+    "jquery": "3.5.1"
   }
 }
