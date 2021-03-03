@@ -114,7 +114,7 @@ def extractLicensePlate(img):
 def trackCars():
 
     # create a file in which to write the output video
-    output_video = cv2.VideoWriter('outputVideo.avi', cv2.VideoWriter_fourcc('M','J','P','G'), 20, (globals.WIDTH, globals.HEIGHT))
+    output_video = cv2.VideoWriter('/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/outputVideo.mp4', cv2.VideoWriter_fourcc('M','J','P','G'), 30, (globals.WIDTH, globals.HEIGHT))
     current_car_id = 0
     frame_cnt = 0
     # get the fps of the video
@@ -142,15 +142,27 @@ def trackCars():
     calculateLineEcuation(globals.START_POINT_LIST, globals.END_POINT_LIST)
     calculateLineEcuationForLowerLine(globals.START_POINT_LIST2, globals.END_POINT_LIST2)
     # preconfigure yoloV3 - only once
-    print("Configuring yolov3...")
+    print("[Info] Configuring yolov3...")
     configureYoloV3()
     # configure reader - only once
-    print("Loading easyOCR")
+    print("[Info] Loading easyOCR...")
     reader = easyocr.Reader(['en'])
 
-    print("Beginning processing the video")
+    print("[Info] Beginning processing the video")
+    
+    # get total number of frames to calculate progress
+    total_frames = VIDEO.get(cv2.CAP_PROP_FRAME_COUNT)
+    progress_step = int(total_frames / 10)
+    current_progress = 10
+
 
     while True:
+
+        # update progress in increment of 10% steps
+        if frame_cnt % progress_step == 0:
+            print("[Progress] " + str(current_progress))
+            current_progress = current_progress + 10
+
 
         if cv2.waitKey(33) == 27:
             break
@@ -163,8 +175,7 @@ def trackCars():
         original_image_4k = image_from_video
 
         # if video is over, break
-        if type(image_from_video) == type(None):
-            print("Video Finished!")
+        if ret == False:
             break
 
         image_from_video = cv2.resize(image_from_video, (globals.WIDTH, globals.HEIGHT))
@@ -180,7 +191,7 @@ def trackCars():
                 cars_to_delete.append(car)
 
         for car in cars_to_delete:
-            print('[Remove] Deleting car with id = ' + str(car))
+            print('[Info] Deleting car with id = ' + str(car))
             sys.stdout.flush()
             # additional argument None needed in case a car is not present in the tracker. Otherwise we get an exception thrown
             car_tracker_dict.pop(car, None)
@@ -221,7 +232,7 @@ def trackCars():
                         break
 
                 if matched_car is None:
-                    print('[Added car] Creating new tracker for car with id = ' + str(current_car_id))
+                    print('[Info] Creating new tracker for car with id = ' + str(current_car_id))
                     sys.stdout.flush()
                     # Create a correlation tracker to track the new identified car in each frame of the video
                     correlation_tracker = dlib.correlation_tracker()
@@ -259,13 +270,13 @@ def trackCars():
                 if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A, globals.B, globals.C, [x2+w2, y2+w2]) and cars_under_first_line[i] == None:
                     #store initial frame_cnt for enter, and the frame for exit
                     frameOfEntryPoint[i] = frame_cnt
-                    print('[Entry point] The car with id = ' + str(i) + ' has entered the speed calculation zone')
+                    # print('[Entry point] The car with id = ' + str(i) + ' has entered the speed calculation zone')
                     sys.stdout.flush()
                     cars_under_first_line[i] = 1
                     # speed_of_cars[i] = calculateSpeed(cars_point1[i], cars_point2[i], globals.FPS ,globals.PPM)
                 if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A2, globals.B2, globals.C2, [x2+w2, y2+w2]) and cars_under_second_line[i] == None:
                     frameOfExitPoint[i] = frame_cnt
-                    print('[Exit point] The car with id = ' + str(i) + ' has exited the speed calculation zone')
+                    # print('[Exit point] The car with id = ' + str(i) + ' has exited the speed calculation zone')
                     sys.stdout.flush()
                     speed_of_cars[i] = calculateAverageSpeed(frameOfEntryPoint[i], frameOfExitPoint[i], globals.FPS, globals.distanceBetweenThe2Lines)
                     cars_under_second_line[i] = 1
@@ -289,7 +300,7 @@ def trackCars():
                         # extract license plate location
                         x_vrp, y_vrp, w_vrp, h_vrp, confidence, type_of_object_detected = extractLicensePlate(cropped_image_4k)
                         if x_vrp != 0:
-                            print('[LPR] License plate position detected for car with id = ' + str(i) )
+                            # print('[Info] License plate position detected for car with id = ' + str(i) )
                             sys.stdout.flush()
                             # draw rectangle to highlight license plate
                             cv2.rectangle(cropped_image_4k, (x_vrp, y_vrp), (x_vrp + w_vrp + 7, y_vrp + h_vrp + 7), (0, 255 , 0), 2)
@@ -299,8 +310,13 @@ def trackCars():
                             actual_license_plate_number = result_from_easyOCR[0][-2]
                             confidence_license_plate_number = result_from_easyOCR[0][-1]
                             license_plate_numbers[i] = actual_license_plate_number
-                            print('[LPR] Vehicle registration number detected [' + actual_license_plate_number + ']' + ' for car with id = ' + str(i) )
+                            print('[Info] Vehicle registration number detected [' + actual_license_plate_number + ']' + ' for car with id = ' + str(i) + ' having the speed ' + str(int(speed_of_cars[i])) + ' km/h')
                             sys.stdout.flush()
+                            print('[Vehicle] The vehicle with the registration plate '+ actual_license_plate_number + ' (' + str(int(confidence_license_plate_number * 100)) + '% accuracy)'+ ' was going ' + str(int(speed_of_cars[i])) + ' km/h')
+                            sys.stdout.flush()
+                            print('[Index] '+str(i))
+                            sys.stdout.flush()
+                            print('[Img path] /home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/exported/' + 'resulted_image_with_LPR' + str(i) + '.png')
                             # put info on image
                             cv2.putText(cropped_image_4k, actual_license_plate_number + " " + str(int(confidence_license_plate_number * 100)) + "%", (x_vrp, y_vrp-8), cv2.FONT_HERSHEY_SIMPLEX , 0.6 , (0, 255, 0), 1)
                             cv2.putText(cropped_image_4k, str(type_of_object_detected) + " " + str(int(confidence*100)) + "%", (x_vrp - 40, y_vrp+50), cv2.FONT_HERSHEY_SIMPLEX , 0.3 , (0, 255, 0), 1)
@@ -324,18 +340,14 @@ def trackCars():
 
         
         # Write output image to the new video file
-        # output_video.write(modified_image)
+        output_video.write(modified_image)
+    VIDEO.release()
+    output_video.release()
 
     cv2.destroyAllWindows()
 
-def dosmth():
-    i = 0
-    while i < 100:
-        i = i + 1
-        print(i)
-
 if __name__ == '__main__':
     # dosmth()
-    print("Begin")
+    print("[Info] Begin")
     trackCars()
     print("Finished")

@@ -17,21 +17,6 @@
   </script>
 
 
-
-
-  <!-- <script>
-
-    setInterval(function () {
-      document.getElementById("progressBarProcessing").setAttribute("aria-valuenow", "20")
-      document.getElementById("progressBarProcessing").setAttribute("style", "width: 20%;")
-      document.getElementById("progressBarProcessing").textContent = "20% Complete"
-
-
-    }, 500)
-
-  </script> -->
-
-
   <style>
     div.row {
       padding: 5px;
@@ -103,7 +88,7 @@
       background-color: FE9000;
     }
 
-    span.badge-danger {
+    span.badge-info {
       background-color: 19180A;
     }
 
@@ -116,28 +101,34 @@
       background-color: 96F550;
       color: 19180A;
     }
+
   </style>
 
 </head>
 
 
 
-<body>
+<body id="body">
 
-  <div class="jumbotron">
+  <div id="jumbotron" class="jumbotron">
     <div class="row">
 
       <div class="col-md-6">
-        <h1 class="display-4">Speed regulation system</h1>
-        <p class="lead">Using image processing, deep learning and math.</p>
-        <p class="lead">Powered by Python and Electron.js</p>
-        <span class="badge badge-pill badge-primary">Car detection</span>
-        <span class="badge badge-pill badge-secondary">License plate recognition</span>
-        <span class="badge badge-danger">Vehicle tracking</span>
-        <span class="badge badge-pill badge-success">Speed calculation</span>
+        <h1 id="h1-title" class="display-4">Speed regulation system</h1>
+        <p id="p-title" class="lead">Using image processing, deep learning and math.</p>
+        <p id="p-title2" class="lead">Powered by Python and Electron.js</p>
+        <span id="badge1" class="badge badge-pill badge-primary">Car detection</span>
+        <span id="badge2" class="badge badge-pill badge-secondary">License plate recognition</span>
+        <span id="badge3" class="badge badge-pill badge-info">Vehicle tracking</span>
+        <span id="badge4" class="badge badge-pill badge-success">Speed calculation</span>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-5">
         <img style="width:45%" src="images/app-logo.png" />
+      </div>
+      <div class="col-md-1">
+        <!-- <button id="light-button" onclick="switchToDarkTheme()" type="button" class="btn btn-light">Light</button> -->
+        <button id="dark-button" onclick="switchToDarkTheme()" type="button" class="btn btn-dark">Dark</button>
+
       </div>
     </div>
   </div>
@@ -148,17 +139,18 @@
       <div class="input-group">
         <div class="custom-file">
           <input type="file" class="custom-file-input" id="inputFile" onChange="loadTheVid()">
-          <label class="custom-file-label" for="inputFile">Choose file</label>
+          <label id="label-choose-file" class="custom-file-label" for="inputFile">Choose file</label>
         </div>
         <div class="input-group-append">
-          <button id="uploadBtn" onclick="get_video()" class="btn btn-outline-secondary" type="button" disabled>Start</button>
+          <button id="uploadBtn" onclick="get_video()" class="btn btn-outline-secondary" type="button"
+            disabled>Start</button>
         </div>
       </div>
     </div>
 
     <div class="col-md-9">
 
-      <div class="progress" style="height: 38px;">
+      <div id="progress-space" class="progress" style="height: 38px;">
         <div id="progressBarProcessing" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
           aria-valuemin="0" aria-valuemax="100">
         </div>
@@ -179,10 +171,10 @@
   <div class="row">
 
     <div class="col-md-6">
-      <h1>Footage</h1>
+      <h1 id="footage-label">Footage</h1>
     </div>
     <div class="col-md-6">
-      <h1>Results</h1>
+      <h1 id="results-label">Results</h1>
     </div>
 
   </div>
@@ -192,7 +184,7 @@
 
     <div class="col-md-6">
       <video id="video" width="720" controls="controls">
-        <source id="videoFrame" src="">
+        <source id="videoFrame" src="" >
       </video>
     </div>
 

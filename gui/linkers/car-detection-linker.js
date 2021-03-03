@@ -19,12 +19,39 @@ function loadTheVid() {
 
     // when loading video, reset progress bar to 0%
     document.getElementById("progressBarProcessing").setAttribute("aria-valuenow", "0")
-    document.getElementById("progressBarProcessing").setAttribute("style", "width: 0%;")
+    document.getElementById("progressBarProcessing").setAttribute("style", "width: 0%; background-color: 00d8ff; color: 18191A;")
     document.getElementById("progressBarProcessing").textContent = "0% Complete"
 
     document.getElementById("list-of-results").innerHTML = '';
 
     document.getElementById("info-user").textContent = "This is where the informations about the processing status of your video are shown.";
+
+}
+
+
+
+function switchToDarkTheme(){
+
+
+      document.getElementById('body').style = 'background-color: 18191A;';
+      document.getElementById('info-user').style = 'background-color: 3A3B3C; color: E4E6EB; border-color: 3A3B3C';
+      document.getElementById('footage-label').style = 'color: E4E6EB;';
+      document.getElementById('results-label').style = 'color: E4E6EB;';
+      document.getElementById('label-choose-file').style = 'background-color: 3A3B3C; color: B0B3B8; border-color: 3A3B3C';
+      document.getElementById('inputFile').style = 'background-color: 3A3B3C; color: B0B3B8;';
+      document.getElementById('uploadBtn').style = 'background-color: 3A3B3C; color: B0B3B8; border-color: 3A3B3C';
+      document.getElementById('jumbotron').style = ' background-color: 3A3B3C;'
+      document.getElementById('h1-title').style = ' color: E4E6EB'
+      document.getElementById('p-title').style = ' color: B0B3B8'
+      document.getElementById('p-title2').style = ' color: B0B3B8'
+    //   document.getElementById('light-button').style = 'background-color: E4E6EB; color: 3A3B3C;'
+      document.getElementById('dark-button').style = 'background-color: B0B3B8; color: 3A3B3C;'
+      document.getElementById('badge1').style = 'background-color: 00d8ff; color: 18191A;'
+      document.getElementById('badge2').style = 'background-color: 00d8ff; color: 18191A;'
+      document.getElementById('badge3').style = 'background-color: 00d8ff; color: 18191A;'
+      document.getElementById('badge4').style = 'background-color: 00d8ff; color: 18191A;'
+      document.getElementById('progress-space').style = 'background-color: 3A3B3C; height: 38px;';
+      document.getElementById('progressBarProcessing').style = 'background-color: 00d8ff; color: 18191A;';
 
 }
 
@@ -56,7 +83,7 @@ function get_video() {
             var progress = message.substr(11)
             //update progress bar
             document.getElementById("progressBarProcessing").setAttribute("aria-valuenow", progress);
-            document.getElementById("progressBarProcessing").setAttribute("style", "width: " + progress + "%;");
+            document.getElementById("progressBarProcessing").setAttribute("style", "width: " + progress + "%; background-color: 00d8ff; color: 18191A;");
             document.getElementById("progressBarProcessing").textContent = progress + "% Complete";
         }
         else if (message.includes("[Vehicle]")) {
@@ -104,6 +131,7 @@ function showResultsAsCards(carIndex, carImagePaths, carTexts) {
         //create card element
         var cardElement = document.createElement("div");
         cardElement.setAttribute('class', "card")
+        cardElement.style = 'background-color: 3A3B3C; color: E4E6EB; border-color: 18191A'
         //create image element 
         var imgEl = document.createElement("img");
         imgEl.setAttribute('class', "card-img-top");
