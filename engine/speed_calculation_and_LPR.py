@@ -7,8 +7,15 @@ import easyocr
 import os
 import sys
 
+# current dir
+curr_dir = os.path.dirname(os.path.realpath(__file__))
+haar_classifier_path = os.path.join(curr_dir, 'car_haar_classifier.xml')
+yolov3_cfg_path = os.path.join(curr_dir, 'yolov3_LPR.cfg')
+yolov3_weights_path = os.path.join(curr_dir, 'yolov3_LPR.weights')
+output_video_path = os.path.join(curr_dir, 'outputVideo.mp4')
+
 # cascade haar classifier for cars
-CAR_CASCADE_HAAR_CLASSIFIER = cv2.CascadeClassifier('/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/car_haar_classifier.xml')
+CAR_CASCADE_HAAR_CLASSIFIER = cv2.CascadeClassifier(haar_classifier_path)
 # import video
 input_video_path = sys.argv[1]
 VIDEO = cv2.VideoCapture(input_video_path)
@@ -60,8 +67,8 @@ def configureYoloV3():
     with open(globals.classesFile, 'rt') as f:
         globals.classNames = f.read().rstrip('\n').split('\n')
     # read the conf file and weights of yolov3
-    modelConfiguration = '/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/yolov3_LPR.cfg'
-    modelWeights = '/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/yolov3_LPR.weights'
+    modelConfiguration = yolov3_cfg_path
+    modelWeights = yolov3_weights_path
     
     globals.net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
     globals.net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -114,7 +121,7 @@ def extractLicensePlate(img):
 def trackCars():
 
     # create a file in which to write the output video
-    output_video = cv2.VideoWriter('/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/outputVideo.mp4', cv2.VideoWriter_fourcc('M','J','P','G'), 30, (globals.WIDTH, globals.HEIGHT))
+    output_video = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc('M','J','P','G'), 30, (globals.WIDTH, globals.HEIGHT))
     current_car_id = 0
     frame_cnt = 0
     # get the fps of the video
@@ -136,7 +143,7 @@ def trackCars():
     license_plate_numbers = [None] * 1000
 
     #define path for exporting pictures
-    img_folder_path = '/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/exported'
+    img_folder_path = os.path.join(curr_dir, 'exported')
 
     # calculate ecuation for the line determined by 2 stable points. Only vehicles passing this line will get the speed registered
     calculateLineEcuation(globals.START_POINT_LIST, globals.END_POINT_LIST)
@@ -316,7 +323,9 @@ def trackCars():
                             sys.stdout.flush()
                             print('[Index] '+str(i))
                             sys.stdout.flush()
-                            print('[Img path] /home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/exported/' + 'resulted_image_with_LPR' + str(i) + '.png')
+                            img_file_name = 'resulted_image_with_LPR' + str(i) + '.png'
+                            print('[Img path] ' + str(os.path.join(img_folder_path, img_file_name)))
+                            sys.stdout.flush()
                             # put info on image
                             cv2.putText(cropped_image_4k, actual_license_plate_number + " " + str(int(confidence_license_plate_number * 100)) + "%", (x_vrp, y_vrp-8), cv2.FONT_HERSHEY_SIMPLEX , 0.6 , (0, 255, 0), 1)
                             cv2.putText(cropped_image_4k, str(type_of_object_detected) + " " + str(int(confidence*100)) + "%", (x_vrp - 40, y_vrp+50), cv2.FONT_HERSHEY_SIMPLEX , 0.3 , (0, 255, 0), 1)
@@ -341,13 +350,14 @@ def trackCars():
         
         # Write output image to the new video file
         output_video.write(modified_image)
+
+    # release writers
     VIDEO.release()
     output_video.release()
 
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    # dosmth()
     print("[Info] Begin")
     trackCars()
     print("Finished")

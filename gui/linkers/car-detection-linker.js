@@ -30,28 +30,28 @@ function loadTheVid() {
 
 
 
-function switchToDarkTheme(){
+function switchToDarkTheme() {
 
 
-      document.getElementById('body').style = 'background-color: 18191A;';
-      document.getElementById('info-user').style = 'background-color: 3A3B3C; color: E4E6EB; border-color: 3A3B3C';
-      document.getElementById('footage-label').style = 'color: E4E6EB;';
-      document.getElementById('results-label').style = 'color: E4E6EB;';
-      document.getElementById('label-choose-file').style = 'background-color: 3A3B3C; color: B0B3B8; border-color: 3A3B3C';
-      document.getElementById('inputFile').style = 'background-color: 3A3B3C; color: B0B3B8;';
-      document.getElementById('uploadBtn').style = 'background-color: 3A3B3C; color: B0B3B8; border-color: 3A3B3C';
-      document.getElementById('jumbotron').style = ' background-color: 3A3B3C;'
-      document.getElementById('h1-title').style = ' color: E4E6EB'
-      document.getElementById('p-title').style = ' color: B0B3B8'
-      document.getElementById('p-title2').style = ' color: B0B3B8'
+    document.getElementById('body').style = 'background-color: 18191A; overflow: hidden;';
+    document.getElementById('info-user').style = 'background-color: 3A3B3C; color: E4E6EB; border-color: 3A3B3C';
+    document.getElementById('footage-label').style = 'color: E4E6EB;';
+    document.getElementById('results-label').style = 'color: E4E6EB;';
+    document.getElementById('label-choose-file').style = 'background-color: 3A3B3C; color: B0B3B8; border-color: 3A3B3C';
+    document.getElementById('inputFile').style = 'background-color: 3A3B3C; color: B0B3B8;';
+    document.getElementById('uploadBtn').style = 'background-color: 3A3B3C; color: B0B3B8; border-color: 3A3B3C';
+    document.getElementById('jumbotron').style = ' background-color: 3A3B3C;'
+    document.getElementById('h1-title').style = ' color: E4E6EB'
+    document.getElementById('p-title').style = ' color: B0B3B8'
+    document.getElementById('p-title2').style = ' color: B0B3B8'
     //   document.getElementById('light-button').style = 'background-color: E4E6EB; color: 3A3B3C;'
-      document.getElementById('dark-button').style = 'background-color: B0B3B8; color: 3A3B3C;'
-      document.getElementById('badge1').style = 'background-color: 00d8ff; color: 18191A;'
-      document.getElementById('badge2').style = 'background-color: 00d8ff; color: 18191A;'
-      document.getElementById('badge3').style = 'background-color: 00d8ff; color: 18191A;'
-      document.getElementById('badge4').style = 'background-color: 00d8ff; color: 18191A;'
-      document.getElementById('progress-space').style = 'background-color: 3A3B3C; height: 38px;';
-      document.getElementById('progressBarProcessing').style = 'background-color: 00d8ff; color: 18191A;';
+    document.getElementById('dark-button').style = 'background-color: B0B3B8; color: 3A3B3C; float: right;'
+    document.getElementById('badge1').style = 'background-color: 00d8ff; color: 18191A;'
+    document.getElementById('badge2').style = 'background-color: 00d8ff; color: 18191A;'
+    document.getElementById('badge3').style = 'background-color: 00d8ff; color: 18191A;'
+    document.getElementById('badge4').style = 'background-color: 00d8ff; color: 18191A;'
+    document.getElementById('progress-space').style = 'background-color: 3A3B3C; height: 38px;';
+    document.getElementById('progressBarProcessing').style = 'background-color: 00d8ff; color: 18191A;';
 
 }
 
@@ -61,11 +61,17 @@ function get_video() {
 
     var filePath = document.getElementById('inputFile').files[0].path
 
+    var curr_loc = window.location.pathname;
+    var script_path = curr_loc.substring(0, curr_loc.lastIndexOf('/'));
+    script_path = script_path.substring(0, script_path.lastIndexOf('/'));
+    script_path = script_path + "/engine"
+
     let options = {
         mode: 'text',
-        pythonPath: '/home/ossi/anaconda3/bin/python3',
+        // pythonPath: '/home/ossi/anaconda3/bin/python3',
         pythonOptions: ['-u'], // get print results in real-time 
-        scriptPath: '/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine', //If you are having python_test.py script in same folder, then it's optional. 
+        // scriptPath: '/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine',
+        scriptPath: script_path,
         args: [filePath] //An argument which can be accessed in the script using sys.argv[1] 
     };
 
@@ -76,7 +82,7 @@ function get_video() {
     var carIndex = [];
 
     script.on('message', function (message) {
-        if (message.includes("[Info]")){
+        if (message.includes("[Info]")) {
             document.getElementById("info-user").textContent = message.substr(7);
         }
         else if (message.includes("[Progress]")) {
@@ -105,8 +111,14 @@ function get_video() {
 
 }
 
-function showResultedVideo(){
-    document.getElementById('videoFrame').setAttribute("src", "/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/outputVideo.mp4")
+function showResultedVideo() {
+    var curr_loc = window.location.pathname;
+    var video_path = curr_loc.substring(0, curr_loc.lastIndexOf('/'));
+    video_path = video_path.substring(0, video_path.lastIndexOf('/'));
+    video_path = video_path + "/engine/outputVideo.mp4"
+
+
+    document.getElementById('videoFrame').setAttribute("src", video_path)
     var video = document.getElementById('video');
     video.load();
 }

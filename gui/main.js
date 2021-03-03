@@ -9,7 +9,7 @@ function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1400,
-    height: 800,
+    height: 900,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
@@ -17,7 +17,7 @@ function createWindow () {
   })
 
   // remove menu bar
-  mainWindow.removeMenu()
+  // mainWindow.removeMenu()
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
 
