@@ -57,6 +57,8 @@ function switchToDarkTheme() {
 
 function get_video() {
 
+    document.getElementById('uploadBtn').disabled = true
+
     //   var city = document.getElementById("city").value  
 
     var filePath = document.getElementById('inputFile').files[0].path
