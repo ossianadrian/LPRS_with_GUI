@@ -168,7 +168,7 @@ def trackCars():
     while True:
 
         # update progress in increment of 10% steps
-        if frame_cnt % progress_step == 0:
+        if (frame_cnt % progress_step == 0) and (current_progress <= 100):
             print("[Progress] " + str(current_progress))
             current_progress = current_progress + 10
 

@@ -20,7 +20,6 @@
     }
   </script>
 
-
   <style>
     div.row {
       padding: 5px;
@@ -145,7 +144,7 @@
     <div class="col-md-3">
       <div class="input-group">
         <div class="custom-file">
-          <input type="file" class="custom-file-input" id="inputFile" onChange="loadTheVid()">
+          <input type="file" accept="video/*" class="custom-file-input" id="inputFile" onChange="loadTheVid()">
           <label id="label-choose-file" class="custom-file-label" for="inputFile">Choose file</label>
         </div>
         <div class="input-group-append">
@@ -195,8 +194,6 @@
           Your browser does not support the video tag.
       </video>
     </div>
-
-
 
     <div class="col-md-6">
       <div id="list-of-results" class="card-columns">

@@ -10,10 +10,21 @@ const { link } = require('fs');
 // load the video when user has browsed
 function loadTheVid() {
 
-    var filePath = document.getElementById('inputFile').files[0].path
-    document.getElementById('videoFrame').setAttribute("src", filePath)
-    var video = document.getElementById('video');
-    video.load();
+    // old version with path uploading
+    // var filePath = document.getElementById('inputFile').files[0].path
+    // document.getElementById('videoFrame').setAttribute("src", filePath)
+    // var video = document.getElementById('video');
+    // video.load();
+
+    // new version with file reader
+    var input = document.getElementById("inputFile");
+    filePath = input.files[0]
+    var freader = new FileReader();
+    freader.readAsDataURL(filePath);
+    freader.onload = function(){
+        document.getElementById("video").src = freader.result;
+    }
+    
 
     document.getElementById("uploadBtn").disabled = false;
 
@@ -33,7 +44,7 @@ function loadTheVid() {
 function switchToDarkTheme() {
 
 
-    document.getElementById('body').style = 'background-color: 18191A; overflow: hidden;';
+    document.getElementById('body').style = 'background-color: 18191A;'; //overflow: hidden;
     document.getElementById('info-user').style = 'background-color: 3A3B3C; color: E4E6EB; border-color: 3A3B3C';
     document.getElementById('footage-label').style = 'color: E4E6EB;';
     document.getElementById('results-label').style = 'color: E4E6EB;';
@@ -206,4 +217,3 @@ function addResultToList(info) {
 
 
 }
-
