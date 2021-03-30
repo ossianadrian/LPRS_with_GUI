@@ -12,7 +12,7 @@ curr_dir = os.path.dirname(os.path.realpath(__file__))
 haar_classifier_path = os.path.join(curr_dir, 'car_haar_classifier.xml')
 yolov3_cfg_path = os.path.join(curr_dir, 'yolov3_LPR.cfg')
 yolov3_weights_path = os.path.join(curr_dir, 'yolov3_LPR.weights')
-output_video_path = os.path.join(curr_dir, 'outputVideo.mp4')
+output_video_path = os.path.join(curr_dir, 'outputVideo.mkv')
 
 # cascade haar classifier for cars
 CAR_CASCADE_HAAR_CLASSIFIER = cv2.CascadeClassifier(haar_classifier_path)
@@ -276,14 +276,14 @@ def trackCars():
                 # if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and y1 >= 275 and y1 <= 450:
 
                 # modified_image = cv2.line(modified_image, (int(x_center), int(y_center)), END_POINT, (0,0,255), 9)
-                if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A, globals.B, globals.C, [x2+w2, y2+w2]) and cars_under_first_line[i] == None:
+                if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A, globals.B, globals.C, [x2+w2, y2+h2]) and cars_under_first_line[i] == None:
                     #store initial frame_cnt for enter, and the frame for exit
                     frameOfEntryPoint[i] = frame_cnt
                     # print('[Entry point] The car with id = ' + str(i) + ' has entered the speed calculation zone')
                     sys.stdout.flush()
                     cars_under_first_line[i] = 1
                     # speed_of_cars[i] = calculateSpeed(cars_point1[i], cars_point2[i], globals.FPS ,globals.PPM)
-                if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A2, globals.B2, globals.C2, [x2+w2, y2+w2]) and cars_under_second_line[i] == None:
+                if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A2, globals.B2, globals.C2, [x2+w2, y2+h2]) and cars_under_second_line[i] == None:
                     frameOfExitPoint[i] = frame_cnt
                     # print('[Exit point] The car with id = ' + str(i) + ' has exited the speed calculation zone')
                     sys.stdout.flush()

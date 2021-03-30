@@ -42,8 +42,6 @@ function loadTheVid() {
 
 
 function switchToDarkTheme() {
-
-
     document.getElementById('body').style = 'background-color: 18191A;'; //overflow: hidden;
     document.getElementById('info-user').style = 'background-color: 3A3B3C; color: E4E6EB; border-color: 3A3B3C';
     document.getElementById('footage-label').style = 'color: E4E6EB;';
@@ -63,8 +61,8 @@ function switchToDarkTheme() {
     document.getElementById('badge4').style = 'background-color: 00d8ff; color: 18191A;'
     document.getElementById('progress-space').style = 'background-color: 3A3B3C; height: 38px;';
     document.getElementById('progressBarProcessing').style = 'background-color: 00d8ff; color: 18191A;';
-
 }
+
 
 function get_video() {
 
