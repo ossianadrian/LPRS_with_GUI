@@ -1,2 +1,4 @@
 node_modules
 *.weights
+
+./gui/package-lock.json
