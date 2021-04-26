@@ -19,7 +19,7 @@ function createWindow () {
   // remove menu bar
   // mainWindow.removeMenu()
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('camera-system.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

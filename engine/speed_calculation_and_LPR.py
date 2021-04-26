@@ -16,7 +16,7 @@ output_video_path = os.path.join(curr_dir, 'outputVideo.mkv')
 
 # cascade haar classifier for cars
 CAR_CASCADE_HAAR_CLASSIFIER = cv2.CascadeClassifier(haar_classifier_path)
-# import video
+# inport video
 input_video_path = sys.argv[1]
 VIDEO = cv2.VideoCapture(input_video_path)
 
@@ -51,7 +51,6 @@ def calculateLineEcuationForLowerLine(P, Q):
     globals.B2 = P[0] - Q[0]
     globals.C2 = globals.A2 * (P[0]) + globals.B2 * (P[1])
 
-# **works only if P is to the left and under the Q
 def checkIfPointIsBelowLine(a, b, c, thePoint):
 
     y_on_line = (c - a * thePoint[0] ) / b
@@ -60,8 +59,6 @@ def checkIfPointIsBelowLine(a, b, c, thePoint):
         return True
     else:
         return False
-
-
 
 def configureYoloV3():
     
@@ -114,10 +111,7 @@ def extractLicensePlate(img):
         x, y, w, h = box[0], box[1], box[2], box[3]
         # return coordinates, confidence and "vehicle registration plate"
         return x, y, w, h, confs[i], globals.classNames[classIds[i]].upper()
-        # cv2.rectangle(img, (x,y), (x+w, y+h), (0, 255, 0), 2)
-        # cv2.putText(img, f'{globals.classNames[classIds[i]].upper()} {int(confs[i] * 100)}%' , (x, y-10), cv2.FONT_HERSHEY_COMPLEX, 0.6, (0,255,0), 2)
     return 0,0,0,0,0,0
-
 
 
 def trackCars():
@@ -129,7 +123,7 @@ def trackCars():
     # get the fps of the video
     globals.FPS = VIDEO.get(cv2.CAP_PROP_FPS)
 
-    #define lists for calculating the avg speed between 2 lines
+    # define lists for calculating the avg speed between 2 lines
     frameOfEntryPoint = [None] * 1000
     frameOfExitPoint = [None] * 1000
     cars_under_first_line = [None] * 1000
@@ -164,7 +158,6 @@ def trackCars():
     progress_step = int(total_frames / 10)
     current_progress = 10
 
-
     while True:
 
         # update progress in increment of 10% steps
@@ -177,7 +170,7 @@ def trackCars():
             break
 
         ret, image_from_video = VIDEO.read()
-        # Count current frame
+        # count current frame
         frame_cnt = frame_cnt + 1
 
         # create a copy of the 4k image
@@ -189,14 +182,14 @@ def trackCars():
 
         image_from_video = cv2.resize(image_from_video, (globals.WIDTH, globals.HEIGHT))
         modified_image = image_from_video.copy()
-        # A list of cars to delete from array. In this list IDs are stored
+        # a list of cars to delete from array. In this list IDs are stored
         cars_to_delete = []
 
         # Check if any car has left the field of view
         for car in car_tracker_dict.keys():
-            #Update the tracking accuracity
+            # update the tracking accuracity
             tracker_accuracity = car_tracker_dict[car].update(image_from_video)
-            if tracker_accuracity < 4:
+            if tracker_accuracity < 6:
                 cars_to_delete.append(car)
 
         for car in cars_to_delete:
@@ -213,7 +206,7 @@ def trackCars():
             #convert image to grayscale
             grayscale_image = cv2.cvtColor(image_from_video, cv2.COLOR_BGR2GRAY)
             # use classifier to detect cars
-            cars_detected = CAR_CASCADE_HAAR_CLASSIFIER.detectMultiScale(grayscale_image, 1.1, 13, 18, (24, 24))
+            cars_detected = CAR_CASCADE_HAAR_CLASSIFIER.detectMultiScale(grayscale_image, 1.1, 13, 13, (24, 24))
             
             for (int32_x, int32_y, int32_w, int32_h) in cars_detected:
                 #cast to integer python
@@ -235,7 +228,6 @@ def trackCars():
                     tracked_y_center = tracked_y + tracked_h * 0.5
 
                     # if the center of gravity for the first tracked car is in range of the one calculated from above, then it's a match
-
                     if (tracked_x <= x_center <= (tracked_x + tracked_w)) and (tracked_y <= y_center <= (tracked_y + tracked_h)) and (x <= tracked_x_center <= (x+w)) and (y <= tracked_y_center <= (y+h)):
                         matched_car = car
                         break
@@ -243,11 +235,11 @@ def trackCars():
                 if matched_car is None:
                     print('[Info] Creating new tracker for car with id = ' + str(current_car_id))
                     sys.stdout.flush()
-                    # Create a correlation tracker to track the new identified car in each frame of the video
+                    # create a correlation tracker to track the new identified car in each frame of the video
                     correlation_tracker = dlib.correlation_tracker()
                     correlation_tracker.start_track(image_from_video, dlib.rectangle(x, y, x+w, y+h))
                     car_tracker_dict[current_car_id] = correlation_tracker
-                    # Save the first point used for calculating speed
+                    # save the first point used for calculating speed
                     cars_point1[current_car_id] = [x, y, w, h]
                     current_car_id = current_car_id + 1
 
@@ -259,7 +251,7 @@ def trackCars():
             # draw a rectangle on the image to identify the car visually
             cv2.rectangle(modified_image, (tracked_x, tracked_y), (tracked_x + tracked_w, tracked_y + tracked_h), (0, 0 , 255), 2)
 
-            # Add point 2 for this car for speed estimation 
+            # add point 2 for this car for speed estimation 
             cars_point2[car] = [tracked_x, tracked_y, tracked_w, tracked_h]
 
 
@@ -272,20 +264,15 @@ def trackCars():
                 x_center = x1 + w1 * 0.5
                 y_center = y1 + h1 * 0.5
 
-                # calculate the speed only if the car passed the point 275 450 and the speed is 0 or None
-                # if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and y1 >= 275 and y1 <= 450:
-
-                # modified_image = cv2.line(modified_image, (int(x_center), int(y_center)), END_POINT, (0,0,255), 9)
                 if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A, globals.B, globals.C, [x2+w2, y2+h2]) and cars_under_first_line[i] == None:
-                    #store initial frame_cnt for enter, and the frame for exit
+                    # store initial frame_cnt for enter, and the frame for exit
                     frameOfEntryPoint[i] = frame_cnt
-                    # print('[Entry point] The car with id = ' + str(i) + ' has entered the speed calculation zone')
+                    # print('[Info] The car with id = ' + str(i) + ' has entered the speed calculation zone')
                     sys.stdout.flush()
                     cars_under_first_line[i] = 1
-                    # speed_of_cars[i] = calculateSpeed(cars_point1[i], cars_point2[i], globals.FPS ,globals.PPM)
                 if (speed_of_cars[i] == 0 or speed_of_cars[i] == None) and checkIfPointIsBelowLine(globals.A2, globals.B2, globals.C2, [x2+w2, y2+h2]) and cars_under_second_line[i] == None:
                     frameOfExitPoint[i] = frame_cnt
-                    # print('[Exit point] The car with id = ' + str(i) + ' has exited the speed calculation zone')
+                    # print('[Info] The car with id = ' + str(i) + ' has exited the speed calculation zone')
                     sys.stdout.flush()
                     speed_of_cars[i] = calculateAverageSpeed(frameOfEntryPoint[i], frameOfExitPoint[i], globals.FPS, globals.distanceBetweenThe2Lines)
                     cars_under_second_line[i] = 1
@@ -300,8 +287,6 @@ def trackCars():
                     if extracted_cars[i] == None:
                         print('[LPR] Preparing image for LPR for car with id = ' + str(i) + ' having the speed = ' + str(int(speed_of_cars[i])) + 'km/h')
                         sys.stdout.flush()
-                        # cv2.imwrite('ExtractedImageForLPR' + str(i) + '.png', image_from_video[y2:(y2 + h2), x2:(x2 + w2)])
-                        # get a more detailed image from original 4k footage. Scale accordingly
                         cropped_image_4k = original_image_4k[int(y2*globals.IMG_720p_TO_2160p):(int(y2*globals.IMG_720p_TO_2160p) + int(h2*globals.IMG_720p_TO_2160p)), int(x2*globals.IMG_720p_TO_2160p):(int(x2*globals.IMG_720p_TO_2160p) + int(w2*globals.IMG_720p_TO_2160p))]
                         # this is when working with fHD footage
                         # cropped_image_4k = image_from_video[y2:(y2 + h2), x2:(x2 + w2)]
@@ -346,10 +331,6 @@ def trackCars():
         cv2.line(modified_image, globals.END_POINT, globals.END_POINT2, (0,0,255), 2)
         cv2.imshow('modified image', modified_image)
 
-        if cv2.waitKey(33) == ord('c'):
-            cv2.imwrite(os.path.join(img_folder_path,'captured_image_from_keyboard.png'), modified_image)
-
-        
         # Write output image to the new video file
         output_video.write(modified_image)
 

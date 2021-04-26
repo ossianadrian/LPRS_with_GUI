@@ -2,21 +2,11 @@ const { PythonShell } = require('python-shell')
 
 var os = require('os');
 var { dialog } = require('electron');
-const { link } = require('fs');
 
-// TODO: sa fac sa pot alege din src-urile de video. Sa il pot alege si pe ala generat. snwpmau sa il pun automat dupa ce il exporteaza
-
-
-// load the video when user has browsed
+// load the video when user has chosen one
 function loadTheVid() {
 
-    // old version with path uploading
-    // var filePath = document.getElementById('inputFile').files[0].path
-    // document.getElementById('videoFrame').setAttribute("src", filePath)
-    // var video = document.getElementById('video');
-    // video.load();
-
-    // new version with file reader
+    // Read video file
     var input = document.getElementById("inputFile");
     filePath = input.files[0]
     var freader = new FileReader();
@@ -24,17 +14,16 @@ function loadTheVid() {
     freader.onload = function(){
         document.getElementById("video").src = freader.result;
     }
-    
 
+    // enable upload button 
     document.getElementById("uploadBtn").disabled = false;
 
     // when loading video, reset progress bar to 0%
     document.getElementById("progressBarProcessing").setAttribute("aria-valuenow", "0")
     document.getElementById("progressBarProcessing").setAttribute("style", "width: 0%; background-color: 00d8ff; color: 18191A;")
     document.getElementById("progressBarProcessing").textContent = "0% Complete"
-
+    // set info bar
     document.getElementById("list-of-results").innerHTML = '';
-
     document.getElementById("info-user").textContent = "This is where the informations about the processing status of your video are shown.";
 
 }
@@ -53,8 +42,8 @@ function switchToDarkTheme() {
     document.getElementById('h1-title').style = ' color: E4E6EB'
     document.getElementById('p-title').style = ' color: B0B3B8'
     document.getElementById('p-title2').style = ' color: B0B3B8'
-    //   document.getElementById('light-button').style = 'background-color: E4E6EB; color: 3A3B3C;'
-    document.getElementById('dark-button').style = 'background-color: B0B3B8; color: 3A3B3C; float: right;'
+    document.getElementById('light-button').style = 'background-color: 000000; color: FFFFFF;'
+    document.getElementById('dark-button').style = 'background-color: E4E6EB; color: 3A3B3C;'
     document.getElementById('badge1').style = 'background-color: 00d8ff; color: 18191A;'
     document.getElementById('badge2').style = 'background-color: 00d8ff; color: 18191A;'
     document.getElementById('badge3').style = 'background-color: 00d8ff; color: 18191A;'
@@ -63,12 +52,31 @@ function switchToDarkTheme() {
     document.getElementById('progressBarProcessing').style = 'background-color: 00d8ff; color: 18191A;';
 }
 
+function switchToLightTheme() {
+    document.getElementById('body').style = 'background-color: FFFFFF;'; //overflow: hidden;
+    document.getElementById('info-user').style = 'background-color: 00d8ff; color: 000000';
+    document.getElementById('footage-label').style = 'color: 000000;';
+    document.getElementById('results-label').style = 'color: 000000;';
+    document.getElementById('label-choose-file').style = 'background-color: FFFFFF; color: 000000;';
+    document.getElementById('inputFile').style = 'background-color: FFFFFF; color: FFFFFF;';
+    document.getElementById('uploadBtn').style = 'background-color: FFFFFF; color: 000000;';
+    document.getElementById('jumbotron').style = ' background-color: EEEEEE;'
+    document.getElementById('h1-title').style = ' color: 000000'
+    document.getElementById('p-title').style = ' color: 000000'
+    document.getElementById('p-title2').style = ' color: 000000'
+    document.getElementById('light-button').style = 'background-color: E4E6EB; color: 3A3B3C;'
+    document.getElementById('dark-button').style = 'background-color: 000000; color: FFFFFF;'
+    document.getElementById('badge1').style = 'background-color: 96F550; color: 000000;'
+    document.getElementById('badge2').style = 'background-color: FE9000; color: FFFFFF;'
+    document.getElementById('badge3').style = 'background-color: 19180A; color: FFFFFF;'
+    document.getElementById('badge4').style = 'background-color: C3423F; color: FFFFFF;'
+    document.getElementById('progress-space').style = 'background-color: EEEEEE; height: 38px;';
+    document.getElementById('progressBarProcessing').style = 'background-color: FFFFFF; color: FFFFFF;';
+}
 
-function get_video() {
+function process_video() {
 
     document.getElementById('uploadBtn').disabled = true
-
-    //   var city = document.getElementById("city").value  
 
     var filePath = document.getElementById('inputFile').files[0].path
 
@@ -79,9 +87,7 @@ function get_video() {
 
     let options = {
         mode: 'text',
-        // pythonPath: '/home/ossi/anaconda3/bin/python3',
         pythonOptions: ['-u'], // get print results in real-time 
-        // scriptPath: '/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine',
         scriptPath: script_path,
         args: [filePath] //An argument which can be accessed in the script using sys.argv[1] 
     };
@@ -127,7 +133,6 @@ function showResultedVideo() {
     var video_path = curr_loc.substring(0, curr_loc.lastIndexOf('/'));
     video_path = video_path.substring(0, video_path.lastIndexOf('/'));
     video_path = video_path + "/engine/outputVideo.mp4"
-
 
     document.getElementById('videoFrame').setAttribute("src", video_path)
     var video = document.getElementById('video');
@@ -183,35 +188,5 @@ function showResultsAsCards(carIndex, carImagePaths, carTexts) {
         resultsDiv.appendChild(cardElement);
 
     }
-
-}
-
-function addResultToList(info) {
-
-
-
-    var ul = document.getElementById("dynamic-list");
-    var popoverElement = document.createElement("a");
-
-    popoverElement.setAttribute('id', "popover1")
-    popoverElement.setAttribute('class', "btn btn-lg btn-danger");
-    popoverElement.setAttribute('tabindex', "0");
-    popoverElement.setAttribute('role', "button");
-    popoverElement.setAttribute('data-toggle', "popover");
-    popoverElement.setAttribute('data-trigger', "focus");
-    popoverElement.setAttribute('title', "Results");
-    popoverElement.setAttribute('data-content', info);
-    popoverElement.textContent = "car";
-
-    ul.appendChild(popoverElement);
-
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    })
-
-
-
-
-
 
 }

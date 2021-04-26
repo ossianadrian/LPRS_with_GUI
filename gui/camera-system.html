@@ -7,16 +7,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-  <script src="linkers/car-detection-linker.js"></script>
-
-
-
+  <script 
+    src="linkers/car-detection-linker.js">
+  </script>
   <script>
     function updateInputFileLabel() {
       console.log(inputFile.value)
       const reader = new FileReader()
       reader.readAsText(input)
-
     }
   </script>
 
@@ -79,7 +77,7 @@
     div.alert {
       margin-left: 20px;
       margin-right: 15px;
-      background-color: 1A8FE3;
+      background-color: 00d8ff;
       color: 19180A;
     }
 
@@ -128,14 +126,15 @@
         <span id="badge3" class="badge badge-pill badge-info">Vehicle tracking</span>
         <span id="badge4" class="badge badge-pill badge-success">Speed calculation</span>
       </div>
-      <div class="col-md-5">
-        <img style="width:45%" src="images/app-logo.png" />
+      <div class="col-md-4">
+        <img style="width:75%" src="images/app-logo.png" />
       </div>
       <div class="col-md-1">
-        <!-- <button id="light-button" onclick="switchToDarkTheme()" type="button" class="btn btn-light">Light</button> -->
         <button id="dark-button" onclick="switchToDarkTheme()" type="button" class="btn btn-dark">Dark</button>
-
       </div>
+      <div class="col-md-1">
+        <button id="light-button" onclick="switchToLightTheme()" type="button" class="btn btn-light">Light</button>
+        </div>
     </div>
   </div>
 
@@ -148,7 +147,7 @@
           <label id="label-choose-file" class="custom-file-label" for="inputFile">Choose file</label>
         </div>
         <div class="input-group-append">
-          <button id="uploadBtn" onclick="get_video()" class="btn btn-outline-secondary" type="button"
+          <button id="uploadBtn" onclick="process_video()" class="btn btn-outline-secondary" type="button"
             disabled>Start</button>
         </div>
       </div>
@@ -162,12 +161,8 @@
         </div>
       </div>
     </div>
-
     <br>
     <br>
-
-
-
   </div>
 
   <div id="info-user" class="alert alert-primary" role="alert">
@@ -198,40 +193,12 @@
     <div class="col-md-6">
       <div id="list-of-results" class="card-columns">
 
-        <!-- Here we add results as images with text
-          
-        <div class="card">
-          <img src="/home/ossi/Documents/licenta/graphical-user-interface/gui-app-lpr/engine/exported/resulted_image_with_LPR0.png" class="card-img-top" alt="Car image">
-          <div class="card-body">
-            <h5 class="card-title">Card title that wraps to a new line</h5>
-            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          </div>
-        </div> -->
-
-
       </div>
 
     </div>
 
 
   </div>
-
-
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script>
-    window.jQuery = window.$ = require('jquery');
-    $(function () {
-      $('[data-toggle="popover"]').popover()
-    })
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
-
 </body>
 
 
