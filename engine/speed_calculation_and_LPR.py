@@ -300,10 +300,15 @@ def trackCars():
                             cv2.rectangle(cropped_image_4k, (x_vrp - 4, y_vrp - 4), (x_vrp + w_vrp + 8, y_vrp + h_vrp + 8), (0, 255 , 0), 2)
                             cropped_license_plate = cropped_image_4k[y_vrp - 4:y_vrp+h_vrp+8, x_vrp - 4:x_vrp+w_vrp+8]
                             # read text from image
-                            result_from_easyOCR = reader.readtext(cropped_license_plate)
-                            actual_license_plate_number = result_from_easyOCR[0][-2]
-                            confidence_license_plate_number = result_from_easyOCR[0][-1]
-                            license_plate_numbers[i] = actual_license_plate_number
+                            try:
+                                result_from_easyOCR = reader.readtext(cropped_license_plate)
+                                actual_license_plate_number = result_from_easyOCR[0][-2]
+                                confidence_license_plate_number = result_from_easyOCR[0][-1]
+                                license_plate_numbers[i] = actual_license_plate_number
+                            except:
+                                actual_license_plate_number = "Unidentified"
+                                confidence_license_plate_number = 0
+                                license_plate_numbers[i] = actual_license_plate_number
                             print('[Info] Vehicle registration number detected [' + actual_license_plate_number + ']' + ' for car with id = ' + str(i) + ' having the speed ' + str(int(speed_of_cars[i])) + ' km/h')
                             sys.stdout.flush()
                             print('[Vehicle] The vehicle with the registration plate '+ actual_license_plate_number + ' (' + str(int(confidence_license_plate_number * 100)) + '% accuracy)'+ ' was going ' + str(int(speed_of_cars[i])) + ' km/h')
