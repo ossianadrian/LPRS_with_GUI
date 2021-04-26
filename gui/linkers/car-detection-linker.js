@@ -83,6 +83,8 @@ function process_video() {
     var curr_loc = window.location.pathname;
     var script_path = curr_loc.substring(0, curr_loc.lastIndexOf('/'));
     script_path = script_path.substring(0, script_path.lastIndexOf('/'));
+    // uncomment next line an comment the one above for windows
+    // script_path = script_path.substring(3, script_path.lastIndexOf('/'));
     script_path = script_path + "/engine"
 
     let options = {

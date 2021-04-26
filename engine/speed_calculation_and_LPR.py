@@ -13,6 +13,7 @@ haar_classifier_path = os.path.join(curr_dir, 'car_haar_classifier.xml')
 yolov3_cfg_path = os.path.join(curr_dir, 'yolov3_LPR.cfg')
 yolov3_weights_path = os.path.join(curr_dir, 'yolov3_LPR.weights')
 output_video_path = os.path.join(curr_dir, 'outputVideo.mkv')
+coco_path = os.path.join(curr_dir, 'coco.names')
 
 # cascade haar classifier for cars
 CAR_CASCADE_HAAR_CLASSIFIER = cv2.CascadeClassifier(haar_classifier_path)
@@ -63,7 +64,7 @@ def checkIfPointIsBelowLine(a, b, c, thePoint):
 def configureYoloV3():
     
     # read file with classes that yolov3 recognizes
-    with open(globals.classesFile, 'rt') as f:
+    with open(coco_path, 'rt') as f:
         globals.classNames = f.read().rstrip('\n').split('\n')
     # read the conf file and weights of yolov3
     modelConfiguration = yolov3_cfg_path
